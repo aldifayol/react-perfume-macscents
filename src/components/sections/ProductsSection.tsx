@@ -1,12 +1,36 @@
+// Backup of the Contentful integration version
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
-import { products } from '../../constants/products';
 import { whatsappOrderLink } from '../../constants/contact';
 import { ProductCard } from '../ui/ProductCard';
 import { Button } from '../ui/Button';
 import { AnimatedSection } from '../ui/AnimatedSection';
+import { useProducts } from '../../hooks/useProducts';
 
 export function ProductsSection() {
+  const { products, loading, error } = useProducts();
+
+  if (loading) {
+    return (
+      <section id="products" className="px-6 md:px-8 py-12 md:py-16 bg-pastel-green/40 dark:bg-dark-bg/50">
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pastel-purple"></div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section id="products" className="px-6 md:px-8 py-12 md:py-16 bg-pastel-green/40 dark:bg-dark-bg/50">
+        <div className="text-center text-red-500">
+          <p className="text-xl font-semibold mb-2">Ops! Gagal memuat produk.</p>
+          <p className="text-sm opacity-75">{error.message}</p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section
       id="products"
