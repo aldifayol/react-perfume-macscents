@@ -4,6 +4,8 @@ export interface Product {
   description: string;
   image: string;
   price?: string;
+  category?: string;
+  featured?: boolean;
 }
 
 export interface Testimonial {
