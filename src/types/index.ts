@@ -4,6 +4,7 @@ export interface Product {
   description: string;
   image: string;
   price?: string;
+  rawValue?: number; // Store raw numeric price for sorting
   category?: string;
   featured?: boolean;
 }
