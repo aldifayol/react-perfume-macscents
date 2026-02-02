@@ -50,6 +50,12 @@ const formatPrice = (price: number): string => {
   }).format(price);
 };
 
+// Helper to capitalize first letter
+const capitalizeFirstLetter = (string: string) => {
+  if (!string) return '';
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
 export const getProducts = async (): Promise<Product[]> => {
   if (!space || !accessToken) {
     console.error('Contentful credentials are missing');
@@ -77,11 +83,12 @@ export const getProducts = async (): Promise<Product[]> => {
 
       return {
         id: item.sys.id,
-        name: fields.name,
+        name: capitalizeFirstLetter(fields.name),
         description: description,
         image: fields.imageUrl,
         price: fields.price ? formatPrice(fields.price) : undefined, // Format number to currency string
-        category: fields.category,
+        rawValue: fields.price, // Store raw numeric value for logic ops
+        category: fields.category ? capitalizeFirstLetter(fields.category) : undefined,
         featured: isFeatured,
       };
     });

@@ -1,10 +1,26 @@
 import { Button } from '../ui/Button';
 import { AnimatedSection } from '../ui/AnimatedSection';
+import { useProducts } from '../../hooks/useProducts';
+import { useMemo } from 'react';
 
 export function HeroSection() {
+  const { products, loading } = useProducts();
+
   const handleExploreClick = () => {
     document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  // Find the most expensive product
+  const heroImage = useMemo(() => {
+    if (products.length === 0) return 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=500&q=80';
+
+    // Sort by rawValue ascending, then take the last one (most expensive)
+    // Note: If rawValue is missing, treat as 0
+    const sorted = [...products].sort((a, b) => (a.rawValue || 0) - (b.rawValue || 0));
+    const mostExpensive = sorted[sorted.length - 1];
+
+    return mostExpensive.image;
+  }, [products]);
 
   return (
     <section
@@ -25,12 +41,16 @@ export function HeroSection() {
         </Button>
       </AnimatedSection>
 
-      <AnimatedSection animation="slide-in-right" delay={200} className="md:w-1/2 mt-10 md:mt-0">
-        <img
-          src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=500&q=80"
-          alt="Macscents Perfume"
-          className="w-full rounded-3xl shadow-lg hover:shadow-2xl transition-shadow duration-300"
-        />
+      <AnimatedSection animation="slide-in-right" delay={200} className="md:w-1/2 mt-10 md:mt-0 flex justify-center">
+        <div className={`relative w-3/4 max-w-sm rounded-3xl overflow-hidden shadow-lg transition-all duration-500 ${loading ? 'animate-pulse bg-gray-200 h-64' : ''}`}>
+           {!loading && (
+             <img
+              src={heroImage}
+              alt="Macscents Premium Perfume"
+              className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700 rounded-3xl"
+            />
+           )}
+        </div>
       </AnimatedSection>
     </section>
   );
